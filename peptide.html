@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        input {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Enter a Sequence of amino acids :</h2>
+        <input type="text" id="user_input" >
+        <button onclick="display()">Calculate</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const amino_acids = ['W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R',
+                          'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L',];
+        console.log(amino_acids)
+       
+        matrix=[[1.0, 1.0, 24.68, 24.68, 1.0, 1.0, 1.0, 13.34, 1.0, 1.0, 1.0, 1.0, -14.03, 1.0, 1.0, -7.49, 1.0, -9.37, -14.03, 13.34],
+[24.68, 1.0, 33.6, 33.6, 1.0, 1.0, -6.54, 1.0, 1.0, 1.0, 20.26, 20.26, 33.6, 1.0, 1.0, -6.54, 1.0, 1.0, 1.0, 20.26],
+[1.0, 1.0, -1.88, 58.28, 24.68, 1.0, -6.54, 1.0, 1.0, -6.54, 1.0, 44.94, -1.88, 1.0, 1.0, 1.0, 44.94, 1.0, 13.34, 1.0],
+[-1.88, 1.0, 1.0, 1.0, 44.94, -9.37, 1.0, 24.68, 44.94, 1.0, 1.0, -1.88, -6.54, 24.68, 1.0, 1.0, 1.0, -9.37, 1.0, 1.0],
+[-9.37, 1.0, 44.94, 13.34, 13.34, 1.0, 1.0, 1.0, 1.0, -15.91, 24.68, 13.34, -7.49, 1.0, -6.54, 1.0, 1.0, -7.49, 24.68, 1.0],
+[1.0, 1.0, 1.0, 1.0, 33.6, 1.0, 1.0, 1.0, 1.0, 1.0, 13.34, 20.26, 1.0, -14.03, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+[1.0, -6.54, 1.0, 1.0, -6.54, -6.54, 20.26, 1.0, 1.0, 1.0, 20.26, 20.26, 1.0, 1.0, 20.26, -6.54, 44.94, 1.0, 1.0, 1.0],
+[-9.37, -1.88, 1.0, 1.0, 1.0, -14.03, -6.54, 1.0, 44.94, 1.0, 1.0, -1.88, -7.49, 24.68, 1.0, 1.0, 1.0, -14.03, 1.0, 1.0],
+[1.0, 1.0, 1.0, 13.34, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.88, 1.0, -7.49, 44.94, -7.49, 1.0, 1.0, 1.0, 20.26],
+[58.28, 1.0, 1.0, 20.26, -6.54, 1.0, 20.26, 13.34, 1.0, 58.28, 1.0, 20.26, 1.0, 1.0, 1.0, 1.0, 44.94, -7.49, 1.0, 1.0],
+[1.0, 1.0, 1.0, 1.0, 1.0, -6.54, 1.0, 1.0, 1.0, -6.54, 1.0, 1.0, -14.03, -7.49, 1.0, 1.0, 20.26, 1.0, 1.0, 1.0],
+[-1.88, -6.54, -6.54, 1.0, 1.0, 20.26, 20.26, 1.0, 1.0, -6.54, -6.54, 20.26, 1.0, 1.0, 18.38, 20.26, 20.26, 1.0, 20.26, 1.0],
+[-14.03, 1.0, 1.0, 1.0, 1.0, 13.34, -6.54, -14.03, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 20.26, 1.0, 1.0, -7.49, 1.0, 1.0],
+[1.0, 1.0, 33.6, 1.0, 1.0, 1.0, 24.68, 1.0, -7.49, 33.6, 1.0, -6.54, 1.0, 1.0, 1.0, -7.49, 1.0, -7.49, 1.0, -7.49],
+[-14.03, 44.94, 1.0, -6.54, 1.0, 1.0, 20.26, 1.0, 20.26, 1.0, 20.26, 20.26, 1.0, 1.0, 33.6, 1.0, 20.26, 1.0, 1.0, 1.0],
+[1.0, 1.0, 1.0, 1.0, -6.54, 1.0, 1.0, 1.0, 1.0, 1.0, -14.03, 20.26, -7.49, -1.88, 1.0, 1.0, 1.0, -7.49, 1.0, 1.0],
+[1.0, 33.6, 1.0, 1.0, 1.0, 1.0, 20.26, 1.0, 1.0, 20.26, 1.0, 44.94, 1.0, 1.0, 20.26, 1.0, 20.26, 1.0, 1.0, 1.0],
+[13.34, 1.0, 1.0, 1.0, -7.49, 1.0, 1.0, -7.49, -7.49, 1.0, 1.0, 1.0, -7.49, -7.49, -6.54, 1.0, 1.0, 13.34, -7.49, 1.0],
+[1.0, 44.94, 1.0, -7.49, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -7.49, 20.26, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+[24.68, 1.0, 1.0, 1.0, 1.0, 1.0, 33.6, 1.0, 1.0, 20.26, 1.0, 20.26, 1.0, -7.49, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
+
+        function averge_peptide(sequence) {
+            if (sequence.length === 0) {
+                return [null, []];
+            }
+            
+            const indices = [];
+
+            for (const aa of sequence) {
+                const index = amino_acids.indexOf(aa);
+                if (index !== -1) {
+                    indices.push(index);
+                }
+            }
+           
+            var sum = 0;
+            const L=indices.length 
+        
+            for (let i = 0; i < L-1; i++) {
+                const row = indices[i];
+                const col = indices[i + 1];
+                console.log(row,col)
+               
+                sum=sum+matrix[row][col]
+                console.log(sum)
+            }
+            const correlation=(10/L)*sum
+            
+
+            return [correlation];
+        }
+
+        function display() {
+            const input = document.getElementById("user_input").value;
+            const sequence= input.split('');
+            
+            const [correlation] = averge_peptide(sequence);
+           
+
+            let resultText = `Correlation : ${correlation}`;
+          
+
+            document.getElementById("output").innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>
